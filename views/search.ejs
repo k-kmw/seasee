@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>sea see</title>
+    <link rel="'stylesheet" href="../css/search.css" />
+  </head>
+  <body>
+    <div class="search__container">
+      <p class="search__title">나와 가장 가까운 바다 찾기</p>
+      <input class="search__input" type="text" placeholder="Search" />
+    </div>
+  </body>
+  <script>
+    function filter() {
+      let search = document.getElementById("search").value.toLowerCase();
+      let listInner = document.getElementsByClassName("listInner");
+
+      for (let i = 0; i < listInner.length; i++) {
+        city = listInner[i].getElementsByClassName("city");
+        country = listInner[i].getElementsByClassName("country");
+        if (
+          city[0].innerHTML.toLowerCase().indexOf(search) != -1 ||
+          country[0].innerHTML.toLowerCase().indexOf(search) != -1
+        ) {
+          listInner[i].style.display = "flex";
+        } else {
+          listInner[i].style.display = "none";
+        }
+      }
+    }
+  </script>
+</html>
