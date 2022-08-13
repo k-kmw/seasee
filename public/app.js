@@ -1,37 +1,3 @@
-// var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
-//     mapOption = { 
-//         center: new kakao.maps.LatLng(35.450701, 127.570667), // 지도의 중심좌표
-//         level: 13 // 지도의 확대 레벨
-//     };
-
-
-// var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
-
-// const markers = [[35.15833, 129.15992, "해운대해수욕장"], [35.15300, 129.11896, "광안리해수욕장"]]
-
-// markers.forEach(m => {
-//     // 마커가 표시될 위치입니다
-//     var markerPosition  = new kakao.maps.LatLng(m[0], m[1]);
-//     // 마커를 생성합니다 
-//     var marker = new kakao.maps.Marker({
-//         position: markerPosition,
-//         clickable: true,
-//         text: m[2]
-//     });
-//     var iwContent = `<div style="padding:5px;">${m[2]} <br><a href="https://map.kakao.com/link/map/Hello World!,33.450701,126.570667" style="color:blue" target="_blank">큰지도보기</a> <a href="https://map.kakao.com/link/to/Hello World!,33.450701,126.570667" style="color:blue" target="_blank">길찾기</a></div>`, // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
-//     iwPosition = new kakao.maps.LatLng(33.450701, 126.570667); //인포윈도우 표시 위치입니다
-
-//     // 인포윈도우를 생성합니다
-//     var infowindow = new kakao.maps.InfoWindow({
-//         position : iwPosition, 
-//         content : iwContent 
-//     });
-  
-// // 마커 위에 인포윈도우를 표시합니다. 두번째 파라미터인 marker를 넣어주지 않으면 지도 위에 표시됩니다
-// infowindow.open(map, marker); 
-//     // 마커가 지도 위에 표시되도록 설정합니다
-//     marker.setMap(map);
-// })
 
 // 마커를 클릭하면 장소명을 표출할 인포윈도우 입니다
 var infowindow = new kakao.maps.InfoWindow({zIndex:1});
@@ -165,35 +131,13 @@ function displayMarker(place) {
         })
     });
 
-    // kakao.maps.event.addListener(marker, 'mouseover', function() {
-    //     var customOverlay = new kakao.maps.CustomOverlay({
-    //         map: map,
-    //         clickable: true,
-    //         content: '<img class="customOverlay" src="img/해운대.jpg" alt="해운대">',
-    //         position: new kakao.maps.LatLng(parseFloat(place.y)),
-    //         xAnchor: 0.5,
-    //         yAnchor: 1,
-    //         zIndex: 3
-    //     });
-    //     customOverlay.setMap(map);
-    // });
 }
 
 
 
 
 
-// kakao.maps.event.addListener(map, 'click', function(mouseEvent) {        
-    
-//     // 클릭한 위도, 경도 정보를 가져옵니다 
-//     var latlng = mouseEvent.latLng;
-    
-//     var message = '클릭한 위치의 위도는 ' + latlng.getLat() + ' 이고, ';
-//     message += '경도는 ' + latlng.getLng() + ' 입니다';
-//     var resultDiv = document.getElementById('result'); 
-//     resultDiv.innerHTML = message;
-    
-// });
+
 
 async function getPeople(loc) {
     return await axios.get(`http://localhost:3000/info?beach_name=${loc}`)
