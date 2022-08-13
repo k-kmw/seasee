@@ -1,10 +1,12 @@
-const express = require('express');
-const path = require('path');
+const express = require("express");
+const path = require("path");
 const app = express();
-app.set('views', path.join(__dirname, 'views'))
-app.set('view engine', 'ejs')
-app.use(express.static(path.join(__dirname, '/public')))
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "ejs");
+app.use(express.static(path.join(__dirname, "/public")));
+app.use(express.static("views"));
 app.listen(3000, () => {
+
     console.log("3000");
 })
 
@@ -28,6 +30,8 @@ app.get('/weather', function(req,res){
   var YO = 136; // 기1준점 Y좌표(GRID)
 
   function dfs_xy_conv(code, v1, v2) {
+
+ 
       var DEGRAD = Math.PI / 180.0;
       var RADDEG = 180.0 / Math.PI;
 
@@ -245,3 +249,46 @@ app.get('/info', function(req,res) {
     res.send(jsonData)
   });
 })
+
+    
+  app.get("/info", function (req, res) {
+    var request = require("request");
+    var url2 =
+      "https://www.tournmaster.com/seantour_map/travel/getBeachCongestionApi.do";
+
+    var beach_name = encodeURI(req.query.beach_name);
+
+    var options = {
+      method: "GET",
+      url: url2,
+      headers: {},
+    };
+
+    request(options, function (error, response) {
+      if (error) throw new Error(error);
+
+      var data = JSON.parse(response.body);
+
+      var current_people = -1;
+      var congestion = -1;
+
+      for (key in data) {
+        if (beach_name == encodeURI(data[key].poiNm)) {
+          current_people = data[key].uniqPop;
+          congestion = data[key].congestion;
+          break;
+        }
+      }
+
+      var data = new Object();
+
+      data.current_people = current_people;
+      data.congestion = congestion;
+
+      var jsonData = JSON.stringify(data);
+
+      res.send(jsonData);
+    });
+  })
+);
+

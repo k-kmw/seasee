@@ -1,26 +1,38 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8">
+  <%-include('header.ejs') %>
+  <head>
+    <meta charset="utf-8" />
     <title>Sea See</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body style="height:100vh">
-    <h1>Sea See</h1>
-    <div text-align: center; class="search__container">
-        <form onsubmit="searchPlaces(); return false;">
-          <input
-            class="search__input"
-            type="text"
-            placeholder="나와 가장 가까운 바다 찾기"
-            id="keyword"
-            size="15"
-          />
-        </form>
-      </div>
-    <div id="map" style="width:70%;height:70%;"></div>
+
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="search.css" />
+    <link rel="stylesheet" href="header.css" />
+  </head>
+  <!-- jQuery에서 제공하는 최신 버전의 jQuery URL -->
+  <body style="height: 100vh">
+    <div class="search__container">
+      <form onsubmit="searchPlaces(); return false;">
+        <input
+          class="search__input"
+          type="text"
+          placeholder="나와 가장 가까운 바다 찾기"
+          id="keyword"
+          size="15"
+        />
+      </form>
+    </div>
+  </body>
+  <body class="contents">
+    <div id="map" style="width: 70%; height: 70%"></div>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=77438d4638c81ad023ae8868bcd8cce8&libraries=services"></script>
+    <script
+      type="text/javascript"
+      src="//dapi.kakao.com/v2/maps/sdk.js?appkey=77438d4638c81ad023ae8868bcd8cce8&libraries=services"
+    ></script>
     <script src="app.js"></script>
-</body>
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="map.js"></script>
+  </body>
+  <section class="info__container"></section>
 </html>
