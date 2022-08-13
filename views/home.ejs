@@ -7,8 +7,18 @@
 </head>
 <body style="height:100vh">
     <h1>Sea See</h1>
+    <div text-align: center; class="search__container">
+        <form onsubmit="searchPlaces(); return false;">
+          <input
+            class="search__input"
+            type="text"
+            placeholder="나와 가장 가까운 바다 찾기"
+            id="keyword"
+            size="15"
+          />
+        </form>
+      </div>
     <div id="map" style="width:70%;height:70%;"></div>
-    <ul id="result"></ul>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=77438d4638c81ad023ae8868bcd8cce8&libraries=services"></script>
     <script src="app.js"></script>

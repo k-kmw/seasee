@@ -51,8 +51,28 @@ var ps = new kakao.maps.services.Places();
 // 키워드로 장소를 검색합니다
 ps.keywordSearch('해수욕장 ', placesSearchCB); 
 
+// 검색 결과 목록이나 마커를 클릭했을 때 장소명을 표출할 인포윈도우를 생성합니다
+var infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
+
+// 키워드로 장소를 검색합니다
+searchPlaces();
+
+// 키워드 검색을 요청하는 함수입니다
+function searchPlaces() {
+    const keyword = document.getElementById("keyword").value;
+    console.log(keyword);
+    if(keyword === ' ') {
+        ps.keywordSearch('해수욕장', placesSearchCB)
+    }
+    else {
+        ps.keywordSearch(keyword, placesSearchCB);
+    }
+
+  // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
+}
+
 // 키워드 검색 완료 시 호출되는 콜백함수 입니다
-function placesSearchCB (data, status, pagination) {
+function placesSearchCB (data, status) {
     if (status === kakao.maps.services.Status.OK) {
 
         // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
@@ -83,23 +103,41 @@ function displayMarker(place) {
         'img/marker.png',
         new kakao.maps.Size(25, 25), new kakao.maps.Point(13, 34));
     marker.setImage(markerImage);
+    
 
     // 마커에 클릭이벤트를 등록합니다
     kakao.maps.event.addListener(marker, 'click', function() {
         // 마커를 클릭하면 장소명이 인포윈도우에 표출됩니다
         infowindow.setContent('<div style="padding:5px;font-size:12px;">' + place.place_name + '</div>');
+        console.log(place);
         infowindow.open(map, marker);
         const placeName = place.place_name;
         const index = placeName.indexOf('해', 1);
         let name = placeName.slice(0, index);
+        const deletePeople = document.querySelector('span');
+        if(deletePeople !== null) {
+            deletePeople.remove();
+        }
+        const deleteWeather = document.querySelector('ul');
+        if(deleteWeather !== null) {
+            deleteWeather.remove();
+        }
+        const deleteUrl = document.querySelector('a');
+        if(deleteUrl !== null) {
+            deleteUrl.remove();
+        }
+
+        const url = place.place_url;
+        const a = document.createElement('a');
+        a.append(url);
+        a.href=url;
+        a.target="blank";
+        document.body.append(a);
 
         getPeople(name)
         .then(res => {
             const people = res.data.current_people;
-            const deleting = document.querySelector('span');
-            if(deleting !== null) {
-                deleting.remove();
-            }
+
             const span = document.createElement('span');
             if(people === -1) {
                 span.append('사람 수 정보 없음')
@@ -110,16 +148,13 @@ function displayMarker(place) {
             document.body.append(span);
         })
 
+        // console.log(marker.getPosition());
         const lat = parseFloat(place.x)
         const lon = parseFloat(place.y)
         getWether(lon, lat)
         .then(res => {
             const datas = res.data.weather;
             // console.log(datas);
-            const deleting = document.querySelector('ul');
-            if(deleting !== null) {
-                deleting.remove();
-            }
             const ul = document.createElement('ul');
             datas.forEach(data => {
                 const li = document.createElement('li');
@@ -129,7 +164,24 @@ function displayMarker(place) {
             })
         })
     });
+
+    // kakao.maps.event.addListener(marker, 'mouseover', function() {
+    //     var customOverlay = new kakao.maps.CustomOverlay({
+    //         map: map,
+    //         clickable: true,
+    //         content: '<img class="customOverlay" src="img/해운대.jpg" alt="해운대">',
+    //         position: new kakao.maps.LatLng(parseFloat(place.y)),
+    //         xAnchor: 0.5,
+    //         yAnchor: 1,
+    //         zIndex: 3
+    //     });
+    //     customOverlay.setMap(map);
+    // });
 }
+
+
+
+
 
 // kakao.maps.event.addListener(map, 'click', function(mouseEvent) {        
     
@@ -150,3 +202,5 @@ async function getPeople(loc) {
 async function getWether(lat, lon) {
     return await axios.get(`http://localhost:3000/weather?lat=${lat}&lng=${lon}`)
 }
+
+
