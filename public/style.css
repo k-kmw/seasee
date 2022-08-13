@@ -4,3 +4,13 @@ body {
     justify-content: center;
     align-items: center;
 }
+
+ul {
+    display: flex;
+    list-style: none;
+    border: 1px solid black;
+}
+
+li {
+    margin: 0 10px;
+}

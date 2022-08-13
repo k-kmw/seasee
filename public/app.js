@@ -4,6 +4,7 @@
 //         level: 13 // 지도의 확대 레벨
 //     };
 
+
 // var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
 
 // const markers = [[35.15833, 129.15992, "해운대해수욕장"], [35.15300, 129.11896, "광안리해수욕장"]]
@@ -88,7 +89,7 @@ function displayMarker(place) {
         if(placeName === '해운대해수욕장') {
             name = '해운대';
         }
-        getRes(name)
+        getPeople(name)
         .then(res => {
             const people = res.data.current_people;
             const deleting = document.querySelector('span');
@@ -97,31 +98,51 @@ function displayMarker(place) {
             }
             const span = document.createElement('span');
             if(people === -1) {
-                span.append('정보 없음')
+                span.append('사람 수 정보 없음')
             }
             else {
             span.append(`현재 사람수: ${res.data.current_people}`);
             }
             document.body.append(span);
         })
-        
 
+        const lat = parseFloat(place.x)
+        const lon = parseFloat(place.y)
+        getWether(lon, lat)
+        .then(res => {
+            const datas = res.data.weather;
+            // console.log(datas);
+            const deleting = document.querySelector('ul');
+            if(deleting !== null) {
+                deleting.remove();
+            }
+            const ul = document.createElement('ul');
+            datas.forEach(data => {
+                const li = document.createElement('li');
+                li.append(data);
+                ul.append(li);
+                document.body.append(ul);
+            })
+        })
     });
 }
 
-kakao.maps.event.addListener(map, 'click', function(mouseEvent) {        
+// kakao.maps.event.addListener(map, 'click', function(mouseEvent) {        
     
-    // 클릭한 위도, 경도 정보를 가져옵니다 
-    var latlng = mouseEvent.latLng;
+//     // 클릭한 위도, 경도 정보를 가져옵니다 
+//     var latlng = mouseEvent.latLng;
     
-    var message = '클릭한 위치의 위도는 ' + latlng.getLat() + ' 이고, ';
-    message += '경도는 ' + latlng.getLng() + ' 입니다';
+//     var message = '클릭한 위치의 위도는 ' + latlng.getLat() + ' 이고, ';
+//     message += '경도는 ' + latlng.getLng() + ' 입니다';
+//     var resultDiv = document.getElementById('result'); 
+//     resultDiv.innerHTML = message;
     
-    var resultDiv = document.getElementById('result'); 
-    resultDiv.innerHTML = message;
-    
-});
+// });
 
-async function getRes(loc) {
+async function getPeople(loc) {
     return await axios.get(`http://localhost:3000/info?beach_name=${loc}`)
+}
+
+async function getWether(lat, lon) {
+    return await axios.get(`http://localhost:3000/weather?lat=${lat}&lng=${lon}`)
 }
