@@ -1,5 +1,5 @@
 //행정구역 구분
-$.getJSON("./ctp_rvn.geojson", function (geojson) {
+$.getJSON("ctp_rvn.json", function (geojson) {
   var data = geojson.features;
   var coordinates = []; //좌표 저장할 배열
   var name = ""; //지역 이름
