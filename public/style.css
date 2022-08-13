@@ -10,8 +10,29 @@
 }
 
 body {
-  margin-top: 0px;
+ margin-top: 0px;
   margin-bottom: 0px;
   padding-top: 0px;
   padding-bottom: 0px;
+}
+
+ul {
+    display: flex;
+    list-style: none;
+    border: 1px solid black;
+}
+
+li {
+    margin: 0 10px;
+}
+
+input {
+    border: 1px solid black;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    font-size: 20px;
+}
+
+a {
+    text-decoration: none;
 }

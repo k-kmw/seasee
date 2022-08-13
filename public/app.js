@@ -1,37 +1,3 @@
-// var mapContainer = document.getElementById('map'), // 지도를 표시할 div
-//     mapOption = {
-//         center: new kakao.maps.LatLng(35.450701, 127.570667), // 지도의 중심좌표
-//         level: 13 // 지도의 확대 레벨
-//     };
-
-// var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
-
-// const markers = [[35.15833, 129.15992, "해운대해수욕장"], [35.15300, 129.11896, "광안리해수욕장"]]
-
-// markers.forEach(m => {
-//     // 마커가 표시될 위치입니다
-//     var markerPosition  = new kakao.maps.LatLng(m[0], m[1]);
-//     // 마커를 생성합니다
-//     var marker = new kakao.maps.Marker({
-//         position: markerPosition,
-//         clickable: true,
-//         text: m[2]
-//     });
-//     var iwContent = `<div style="padding:5px;">${m[2]} <br><a href="https://map.kakao.com/link/map/Hello World!,33.450701,126.570667" style="color:blue" target="_blank">큰지도보기</a> <a href="https://map.kakao.com/link/to/Hello World!,33.450701,126.570667" style="color:blue" target="_blank">길찾기</a></div>`, // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
-//     iwPosition = new kakao.maps.LatLng(33.450701, 126.570667); //인포윈도우 표시 위치입니다
-
-//     // 인포윈도우를 생성합니다
-//     var infowindow = new kakao.maps.InfoWindow({
-//         position : iwPosition,
-//         content : iwContent
-//     });
-
-// // 마커 위에 인포윈도우를 표시합니다. 두번째 파라미터인 marker를 넣어주지 않으면 지도 위에 표시됩니다
-// infowindow.open(map, marker);
-//     // 마커가 지도 위에 표시되도록 설정합니다
-//     marker.setMap(map);
-// })
-
 // 마커를 클릭하면 장소명을 표출할 인포윈도우 입니다
 var infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
 
@@ -53,18 +19,31 @@ var infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
 // 키워드로 장소를 검색합니다
 searchPlaces();
 
+
+// 검색 결과 목록이나 마커를 클릭했을 때 장소명을 표출할 인포윈도우를 생성합니다
+var infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
+
+// 키워드로 장소를 검색합니다
+searchPlaces();
+
 // 키워드 검색을 요청하는 함수입니다
 function searchPlaces() {
-  var keyword = document.getElementById("keyword").value;
-
-  //   if (!keyword.replace(/^\s+|\s+$/g, "")) {
-  //     alert("키워드를 입력해주세요!");
-  //     return false;
-  //   }
+    const keyword = document.getElementById("keyword").value;
+    console.log(keyword);
+    if(keyword === ' ') {
+        ps.keywordSearch('해수욕장', placesSearchCB)
+    }
+    else {
+        ps.keywordSearch(keyword, placesSearchCB);
+    }
 
   // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
-  ps.keywordSearch(keyword, placesSearchCB);
 }
+
+// 키워드 검색 완료 시 호출되는 콜백함수 입니다
+function placesSearchCB (data, status) {
+    if (status === kakao.maps.services.Status.OK) {
+
 
 // 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
 function placesSearchCB(data, status, pagination) {
@@ -106,6 +85,7 @@ function placesSearchCB(data, status, pagination) {
 
 // 지도에 마커를 표시하는 함수입니다
 function displayMarker(place) {
+
   // 마커를 생성하고 지도에 표시합니다
   var marker = new kakao.maps.Marker({
     map: map,
@@ -142,17 +122,87 @@ function displayMarker(place) {
   });
 }
 
-kakao.maps.event.addListener(map, "click", function (mouseEvent) {
-  // 클릭한 위도, 경도 정보를 가져옵니다
-  var latlng = mouseEvent.latLng;
+    var markerImage = new kakao.maps.MarkerImage(
+        'img/marker.png',
+        new kakao.maps.Size(25, 25), new kakao.maps.Point(13, 34));
+    marker.setImage(markerImage);
+    
 
-  var message = "클릭한 위치의 위도는 " + latlng.getLat() + " 이고, ";
-  message += "경도는 " + latlng.getLng() + " 입니다";
+    // 마커에 클릭이벤트를 등록합니다
+    kakao.maps.event.addListener(marker, 'click', function() {
+        // 마커를 클릭하면 장소명이 인포윈도우에 표출됩니다
+        infowindow.setContent('<div style="padding:5px;font-size:12px;">' + place.place_name + '</div>');
+        console.log(place);
+        infowindow.open(map, marker);
+        const placeName = place.place_name;
+        const index = placeName.indexOf('해', 1);
+        let name = placeName.slice(0, index);
+        const deletePeople = document.querySelector('span');
+        if(deletePeople !== null) {
+            deletePeople.remove();
+        }
+        const deleteWeather = document.querySelector('ul');
+        if(deleteWeather !== null) {
+            deleteWeather.remove();
+        }
+        const deleteUrl = document.querySelector('a');
+        if(deleteUrl !== null) {
+            deleteUrl.remove();
+        }
 
-  var resultDiv = document.getElementById("result");
-  resultDiv.innerHTML = message;
-});
+        const url = place.place_url;
+        const a = document.createElement('a');
+        a.append(url);
+        a.href=url;
+        a.target="blank";
+        document.body.append(a);
 
-async function getRes(loc) {
-  return await axios.get(`http://localhost:3000/info?beach_name=${loc}`);
+        getPeople(name)
+        .then(res => {
+            const people = res.data.current_people;
+
+            const span = document.createElement('span');
+            if(people === -1) {
+                span.append('사람 수 정보 없음')
+            }
+            else {
+            span.append(`현재 사람수: ${res.data.current_people}`);
+            }
+            document.body.append(span);
+        })
+
+        // console.log(marker.getPosition());
+        const lat = parseFloat(place.x)
+        const lon = parseFloat(place.y)
+        getWether(lon, lat)
+        .then(res => {
+            const datas = res.data.weather;
+            // console.log(datas);
+            const ul = document.createElement('ul');
+            datas.forEach(data => {
+                const li = document.createElement('li');
+                li.append(data);
+                ul.append(li);
+                document.body.append(ul);
+            })
+        })
+    });
+
 }
+
+
+
+
+
+
+
+async function getPeople(loc) {
+    return await axios.get(`http://localhost:3000/info?beach_name=${loc}`)
+
+}
+
+async function getWether(lat, lon) {
+    return await axios.get(`http://localhost:3000/weather?lat=${lat}&lng=${lon}`)
+}
+
+
