@@ -25,7 +25,7 @@ searchPlaces();
 // 키워드 검색을 요청하는 함수입니다
 function searchPlaces() {
   const keyword = document.getElementById("keyword").value;
-  console.log(keyword);
+  // console.log(keyword);
   if (keyword === " ") {
     ps.keywordSearch("해수욕장", placesSearchCB);
   } else {
@@ -73,7 +73,7 @@ function displayMarker(place) {
     infowindow.setContent(
       '<div style="padding:5px;font-size:12px;">' + place.place_name + "</div>"
     );
-    console.log(place);
+    // console.log(place);
     infowindow.open(map, marker);
     const placeName = place.place_name;
     const index = placeName.indexOf("해", 1);
